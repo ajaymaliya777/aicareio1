@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Send, CheckCircle2, AlertCircle, Loader2, Sparkles } from 'lucide-react';
 import axios from 'axios';
+import { ConfettiBurst } from './engagement/ConfettiBurst.js';
+import { useToast } from './engagement/ToastProvider.js';
+import { useSectionVisit } from './engagement/useSectionVisit.js';
 
 interface FormProps {
   idPrefix?: string;
@@ -21,6 +24,8 @@ export const EnquiryForm: React.FC<FormProps> = ({ idPrefix = 'enquiry', default
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const { showToast } = useToast();
+  useSectionVisit(`form-${idPrefix}`);
 
   const services = [
     { label: 'Generative AI & LLM Applications', value: 'GEN Ai' },
@@ -61,6 +66,7 @@ export const EnquiryForm: React.FC<FormProps> = ({ idPrefix = 'enquiry', default
 
       if (response.data && response.data.success) {
         setSubmitted(true);
+        showToast('Excellent — request received!');
       } else {
         throw new Error(response.data?.message || 'Submission failed');
       }
@@ -89,6 +95,7 @@ export const EnquiryForm: React.FC<FormProps> = ({ idPrefix = 'enquiry', default
         );
 
         setSubmitted(true);
+        showToast('Excellent — request received!');
       } catch (fallbackError) {
         setErrorMessage('Unable to dispatch request automatically. Please reach us directly at designerstudio597@gmail.com.');
       }
@@ -107,6 +114,7 @@ export const EnquiryForm: React.FC<FormProps> = ({ idPrefix = 'enquiry', default
           boxShadow: '0 0 35px rgba(0, 240, 255, 0.15)',
         }}
       >
+        <ConfettiBurst />
         <div
           style={{
             width: '64px',
